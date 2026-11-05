@@ -70,9 +70,10 @@ void MediaController::handleEarDetection(EarDetection *earDetection)
       if (earDetection->isPrimaryInEar() || earDetection->isSecondaryInEar())
         return;
 
+      // The AirPods stay the output, as on Apple devices: turning the card profile off moves the
+      // default sink to another output at its own volume.
       if (isActiveOutputDeviceAirPods() && getCurrentMediaState() == Playing)
         pause();
-      removeAudioOutputDevice();
     });
     return;
   }

@@ -18,6 +18,7 @@
 #include <functional>
 #include <memory>
 #include <unistd.h>
+#include <QBluetoothDeviceInfo>
 #include <QBluetoothLocalDevice>
 #include <QBluetoothSocket>
 #include <QQuickWindow>
