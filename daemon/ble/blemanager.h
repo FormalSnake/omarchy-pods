@@ -86,13 +86,14 @@ private slots:
     void onInterfacesAdded(const QDBusMessage &message);
     void onInterfacesRemoved(const QDBusMessage &message);
     void onBluezOwnerChanged(const QString &service, const QString &oldOwner, const QString &newOwner);
+    // A slot so tst_blemanager can feed it frames without a BlueZ to watch.
+    void parseAdvertisement(const QString &address, const QString &name, const QByteArray &data);
 
 private:
     void registerMonitor();
     void unregisterMonitor();
     void forgetDevices();
     void handleDeviceProperties(const QString &devicePath, const QVariantMap &properties);
-    void parseAdvertisement(const QString &address, const QString &name, const QByteArray &data);
 
     // Watches AirPods adverts through BlueZ's Advertisement Monitor rather than a discovery
     // session. Discovery sessions are shared: every client that starts or stops one makes

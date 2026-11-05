@@ -54,8 +54,10 @@ static int parseFrame(const QByteArray &frame, BleInfo *emitted)
         ++emissions;
     });
 
-    if (!QMetaObject::invokeMethod(&manager, "onDeviceDiscovered", Qt::DirectConnection,
-                                   Q_ARG(QBluetoothDeviceInfo, advertisement(frame))))
+    const QBluetoothDeviceInfo info = advertisement(frame);
+    if (!QMetaObject::invokeMethod(&manager, "parseAdvertisement", Qt::DirectConnection,
+                                   Q_ARG(QString, info.address().toString()), Q_ARG(QString, info.name()),
+                                   Q_ARG(QByteArray, info.manufacturerData().value(0x004C))))
         return -1;
 
     return emissions;
