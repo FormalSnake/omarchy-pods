@@ -421,6 +421,21 @@ public slots:
         }
     }
 
+    // The primary bud streams the motion, and the two buds' sensor frames face opposite ears,
+    // so a watcher has to know which one it is reading.
+    QByteArray motionBud() const {
+        if (!m_deviceInfo)
+            return {};
+        switch (m_deviceInfo->getBattery()->getPrimaryPod()) {
+        case Battery::Component::Left:
+            return ",\"bud\":\"left\"";
+        case Battery::Component::Right:
+            return ",\"bud\":\"right\"";
+        default:
+            return {};
+        }
+    }
+
     void publishMotion(const Motion::Sample &s) {
         const QByteArray line = QByteArray("{\"q\":[") + QByteArray::number(s.w, 'g', 6) + ','
             + QByteArray::number(s.x, 'g', 6) + ',' + QByteArray::number(s.y, 'g', 6) + ','
@@ -428,7 +443,7 @@ public slots:
             + QByteArray::number(s.gravity[1]) + ',' + QByteArray::number(s.gravity[2]) + "],\"gyro\":["
             + QByteArray::number(s.gyro[0]) + ',' + QByteArray::number(s.gyro[1]) + ','
             + QByteArray::number(s.gyro[2]) + "],\"t\":" + QByteArray::number(QDateTime::currentMSecsSinceEpoch())
-            + "}\n";
+            + motionBud() + "}\n";
         for (QLocalSocket *watcher : std::as_const(m_motionWatchers)) {
             watcher->write(line);
         }
